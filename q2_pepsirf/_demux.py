@@ -3,6 +3,7 @@ import os
 import tempfile
 import subprocess
 import gzip
+import io
 import shutil
 
 import pandas as pd
@@ -24,7 +25,8 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
            r_index: qiime2.plugin.Str = "",
            num_threads: qiime2.plugin.Int = 2,
            read_per_loop: qiime2.plugin.Int = 800000,
-           concatemer: qiime2.plugin.Str = ""
+           concatemer: qiime2.plugin.Str = "",
+           aa_counts: qiime2.plugin.Str = ""
          ) -> ( pd.DataFrame, pd.DataFrame  ):
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
@@ -45,7 +47,6 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--seq',     seq,
             '--library', str( library ),
             '--read_per_loop', str( read_per_loop ),
-            '--aa_counts', aa_count_out.name,
             '--output', tsv_count_out.name,
             '--samplelist', samplelist,
             '--index', str( barcodes ),
@@ -55,6 +56,12 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
         cmd += [ '--r_index', r_index ]
     if concatemer:
         cmd += [ '--concatemer', concatemer ]
+    if aa_counts:
+        cmd += [ '--aa_counts', aa_count_out.name ]
+    else:
+        aa_count_out = io.StringIO()
+        out.write( 'Sequence name' )
+        out.close()
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
 
@@ -78,6 +85,7 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
                   num_threads: qiime2.plugin.Int = 2,
                   read_per_loop: qiime2.plugin.Int = 800000,
                   concatemer: qiime2.plugin.Str = "",
+                  aa_counts: qiime2.plugin.Str = ""
                 ) -> ( pd.DataFrame, pd.DataFrame  ):
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
@@ -96,7 +104,6 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--seq',     seq,
             '--library', str( library ),
             '--read_per_loop', str( read_per_loop ),
-            '--aa_counts', aa_count_out.name,
             '--output', tsv_count_out.name,
             '--samplelist', samplelist,
             '--index', str( barcodes ),
@@ -106,6 +113,12 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
         cmd += [ '--r_index', r_index ]
     if concatemer:
         cmd += [ '--concatemer', concatemer ]
+    if aa_counts:
+        cmd += [ '--aa_counts', aa_count_out.name ]
+    else:
+        aa_count_out = io.StringIO()
+        out.write( 'Sequence name' )
+        out.close()
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
 
