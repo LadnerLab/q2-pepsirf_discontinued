@@ -17,7 +17,7 @@ import qiime2.plugin
 
 def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
            library: DNAFASTAFormat,
-           sample_seqs: DNAFASTAFormat,
+           barcodes: DNAFASTAFormat,
            samplelist: qiime2.plugin.Str,
            f_index: qiime2.plugin.Str,
            seq:     qiime2.plugin.Str,
@@ -48,7 +48,7 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--aa_counts', aa_count_out.name,
             '--output', tsv_count_out.name,
             '--samplelist', samplelist,
-            '--index', str( sample_seqs ),
+            '--index', str( barcodes ),
             '--num_threads', str( num_threads )
             ]
     if r_index:
@@ -70,7 +70,7 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
 def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
                   r_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
                   library: DNAFASTAFormat,
-                  sample_seqs: DNAFASTAFormat,
+                  barcodes: DNAFASTAFormat,
                   samplelist: qiime2.plugin.Str,
                   seq:     qiime2.plugin.Str,
                   f_index: qiime2.plugin.Str,
@@ -99,7 +99,7 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--aa_counts', aa_count_out.name,
             '--output', tsv_count_out.name,
             '--samplelist', samplelist,
-            '--index', str( sample_seqs ),
+            '--index', str( barcodes ),
             '--num_threads', str( num_threads )
             ]
     if r_index:
