@@ -30,7 +30,8 @@ plugin.methods.register_function(
                     'r_index':       qiime2.plugin.Str,
                     'seq':           qiime2.plugin.Str,
                     'read_per_loop': qiime2.plugin.Int,
-                    'num_threads'  : qiime2.plugin.Int
+                    'num_threads'  : qiime2.plugin.Int,
+                    'concatemer'  :  qiime2.plugin.Str
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
                 ( 'aa_counts', FeatureTable[ Frequency ] )
@@ -56,7 +57,8 @@ plugin.methods.register_function(
                     'r_index':       qiime2.plugin.Str,
                     'seq':           qiime2.plugin.Str,
                     'read_per_loop': qiime2.plugin.Int,
-                    'num_threads'  : qiime2.plugin.Int
+                    'num_threads'  : qiime2.plugin.Int,
+                    'concatemer'  :  qiime2.plugin.Str
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
                 ( 'aa_counts', FeatureTable[ Frequency ] )
