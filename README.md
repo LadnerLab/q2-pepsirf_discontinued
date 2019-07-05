@@ -13,3 +13,9 @@ python setup.py install
 qiime dev refresh-cache
 ```
 The plugin should now be available from qiime.
+
+### Usage
+```
+qiime pepsirf demux --help
+qiime pepsirf demux-paired --help
+```
