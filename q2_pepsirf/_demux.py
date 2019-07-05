@@ -120,7 +120,9 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
 def _unzip_gz( f_name ):
     of = gzip.open( f_name, 'rb' )
     inflated = tempfile.NamedTemporaryFile( mode = 'wb' )
-    shutil.copyfileobj( zip_file, temp_in )
+    shutil.copyfileobj( of, inflated )
     inflated.flush() 
+
+    of.close()
 
     return inflated
