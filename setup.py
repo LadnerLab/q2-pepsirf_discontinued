@@ -25,6 +25,7 @@ setup(
         ["q2-pepsirf=q2_pepsirf.plugin_setup:plugin"]
     },
     package_data={
-        'q2_vsearch': ['citations.bib'],
-        zip_safe=False,
+        # 'q2_pepsirf': ['citations.bib'],
+        },
+        zip_safe = False,
     )
