@@ -23,7 +23,8 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
            seq:     qiime2.plugin.Str,
            r_index: qiime2.plugin.Str = "",
            num_threads: qiime2.plugin.Int = 2,
-           read_per_loop: qiime2.plugin.Int = 800000
+           read_per_loop: qiime2.plugin.Int = 800000,
+           concatemer: qiime2.plugin.Str = ""
          ) -> ( pd.DataFrame, pd.DataFrame  ):
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
@@ -52,6 +53,8 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             ]
     if r_index:
         cmd += [ '--r_index', r_index ]
+    if concatemer:
+        cmd += [ '--concatemer', concatemer ]
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
 
@@ -73,7 +76,8 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
                   f_index: qiime2.plugin.Str,
                   r_index: qiime2.plugin.Str = "",
                   num_threads: qiime2.plugin.Int = 2,
-                  read_per_loop: qiime2.plugin.Int = 800000
+                  read_per_loop: qiime2.plugin.Int = 800000,
+                  concatemer: qiime2.plugin.Str = "",
                 ) -> ( pd.DataFrame, pd.DataFrame  ):
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
@@ -100,6 +104,8 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             ]
     if r_index:
         cmd += [ '--r_index', r_index ]
+    if concatemer:
+        cmd += [ '--concatemer', concatemer ]
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
 
