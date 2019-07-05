@@ -25,7 +25,39 @@ plugin.methods.register_function(
         'reads':       MultiplexedSingleEndBarcodeInSequence,
         'sample_seqs': FeatureData[ Sequence ]
     },
-    parameters = { 'samplelist': qiime2.plugin.Str },
+    parameters = { 'samplelist':     qiime2.plugin.Str,
+                    'f_index':       qiime2.plugin.Str,
+                    'r_index':       qiime2.plugin.Str,
+                    'seq':           qiime2.plugin.Str,
+                    'read_per_loop': qiime2.plugin.Int,
+                    'num_threads'  : qiime2.plugin.Int
+                 },
+    outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
+                ( 'aa_counts', FeatureTable[ Frequency ] )
+              ],
+    input_descriptions     = {},
+    parameter_descriptions = {},
+    output_descriptions    = {},
+    name = 'PepSIRF Demux',
+    description = ( 'Description' )
+    
+    )
+
+plugin.methods.register_function( 
+    function = q2_pepsirf._demux.demux_paired, 
+    inputs = {
+        'library':     FeatureData[ Sequence ],
+        'f_reads':     MultiplexedSingleEndBarcodeInSequence,
+        'r_reads':     MultiplexedSingleEndBarcodeInSequence,
+        'sample_seqs': FeatureData[ Sequence ]
+    },
+    parameters = { 'samplelist':     qiime2.plugin.Str,
+                    'f_index':       qiime2.plugin.Str,
+                    'r_index':       qiime2.plugin.Str,
+                    'seq':           qiime2.plugin.Str,
+                    'read_per_loop': qiime2.plugin.Int,
+                    'num_threads'  : qiime2.plugin.Int
+                 },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
                 ( 'aa_counts', FeatureTable[ Frequency ] )
               ],
