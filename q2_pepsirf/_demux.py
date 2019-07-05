@@ -58,8 +58,6 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
     temp_in.close()
     one = pd.read_csv( tsv_count_out.name, sep = '\t', index_col = 'Sequence name' )
     two = pd.read_csv( aa_count_out.name,  sep = '\t', index_col = 'Sequence name' )
-    print( one )
-    print( two )
 
     aa_count_out.close()
     tsv_count_out.close()
@@ -109,8 +107,6 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
     r_inflated.close()
     one = pd.read_csv( tsv_count_out.name, sep = '\t', index_col = 'Sequence name' )
     two = pd.read_csv( aa_count_out.name,  sep = '\t', index_col = 'Sequence name' )
-    print( one )
-    print( two )
 
     aa_count_out.close()
     tsv_count_out.close()
