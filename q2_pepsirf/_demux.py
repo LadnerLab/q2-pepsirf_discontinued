@@ -19,10 +19,13 @@ import qiime2.plugin
 def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
            library: DNAFASTAFormat,
            sample_seqs: DNAFASTAFormat,
-           samplelist: qiime2.plugin.Str
+           samplelist: qiime2.plugin.Str,
+           f_index: qiime2.plugin.Str,
+           r_index: qiime2.plugin.Str,
+           seq:     qiime2.plugin.Str,
+           num_threads: qiime2.plugin.Int,
+           read_per_loop: qiime2.plugin.Int
          ) -> ( pd.DataFrame, pd.DataFrame  ):
-    print( "Hello everybody" )
-
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
 
@@ -37,17 +40,17 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
 
     cmd = [ 'pep_sirf',
             'demux',
-            # '--input_r1', str( reads.file.view( FastqGzFormat ) ),
             '--input_r1', temp_in.name,
-            '--f_index', "12,12,0",
-            '--r_index', "112,8,0",
-            '--seq', '43,45,0',
+            '--f_index', f_index,
+            '--r_index', r_index,
+            '--seq',     seq,
             '--library', str( library ),
-            '--read_per_loop', '800000',
+            '--read_per_loop', str( read_per_loop ),
             '--aa_counts', aa_count_out.name,
             '--output', tsv_count_out.name,
             '--samplelist', samplelist,
-            '--index', str( sample_seqs )
+            '--index', str( sample_seqs ),
+            '--num_threads', str( num_threads )
             ]
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
