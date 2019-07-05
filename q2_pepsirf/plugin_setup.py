@@ -44,6 +44,7 @@ plugin.methods.register_function(
                                           'peptides. Library should be in fasta '
                                           'format and should contain sequences that'
                                           'were used to design the sequences in reads.',
+
                                'reads':   'Input reads file to parse. These should be '
                                           'in fastq format. Reads can already be indexed on '
                                           'the reverse barcode sequences, in which case the '
@@ -52,6 +53,7 @@ plugin.methods.register_function(
                                           'should be specified. If you have one file for forward reads '
                                           'and one for reverse reads the demux_paired command '
                                           'should be used.',
+
                                'barcodes':  'Name of fasta file containing forward '
                                             'and (potentially) reverse barcode '
                                             'sequences.'
@@ -63,8 +65,8 @@ plugin.methods.register_function(
                                               'required. The first item in each '
                                               'tab-delimited line is the forward (I1) '
                                               'index, the second (if included) is the '
-                                              'reverse (I2) index, and the third is the'
-                                              'samplename. ',
+                                              'reverse (I2) index, and the third is the '
+                                              'sample name. ',
 
                                'f_index': 'Positional values for f_index. This '
                                            'argument must be passed as 3 '
@@ -155,8 +157,93 @@ plugin.methods.register_function(
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
                 ( 'aa_counts', FeatureTable[ Frequency ] )
               ],
-    input_descriptions     = {},
-    parameter_descriptions = {},
+    input_descriptions     = { 'library': 'Designed library containing nucleic acid'
+                                          'peptides. Library should be in fasta '
+                                          'format and should contain sequences that'
+                                          'were used to design the sequences in reads.',
+                               'f_reads':   'Input reads file to parse.',
+                               'r_reads':   'Input reverse reads file to parse. '
+                                            'This file can contain either just barcode reads '
+                                            'or contain reverse reads. Either way the expected position '
+                                            'of the reverse barcodes must be specified by the r_index parameter.',
+                               'barcodes':  'Name of fasta file containing forward '
+                                            'and (potentially) reverse barcode '
+                                            'sequences.'
+                             },
+    parameter_descriptions = { 'samplelist': 'A tab-delimited list of samples, one '
+                                              'sample per line. If the samples are '
+                                              'already indexed by I2 only the forward '
+                                              'index (I1) and the sample name are '
+                                              'required. The first item in each '
+                                              'tab-delimited line is the forward (I1) '
+                                              'index, the second (if included) is the '
+                                              'reverse (I2) index, and the third is the'
+                                              'samplename. ',
+
+                               'f_index': 'Positional values for f_index. This '
+                                           'argument must be passed as 3 '
+                                           'comma-separated values. The first item '
+                                           'represents the (0-based) expected start '
+                                           'index of the forward index. The second '
+                                           'represents the length of the forward '
+                                           'index, and the third represents the '
+                                           'number of mismatches that are tolerated '
+                                           'for this index. An example is "--f_index'
+                                           '12,12,2". This says that we start at '
+                                           '(0-based) index 12, grab the next 12 '
+                                           'characters, and if a perfect match is '
+                                           'not found for these grabbed characters '
+                                           'we look for a match to the forward index'
+                                           'sequences with up to two allowed '
+                                           'mismatches.',
+
+                               'r_index': 'Positional values for r_index. This '
+                                          'argument must be passed as 3 '
+                                           'comma-separated values. The first item '
+                                           'represents the (0-based) expected start '
+                                           'index of the reverse index. The second '
+                                           'represents the length of the reverse '
+                                           'index, and the third represents the '
+                                           'number of mismatches that are tolerated '
+                                           'for this index. An example is "--r_index'
+                                           '12,12,2". This says that we start at '
+                                           '(0-based) index 12, grab the next 12 '
+                                           'characters, and if a perfect match is '
+                                           'not found for these grabbed characters '
+                                           'we look for a match to the reverse index'
+                                           'sequences with up to two allowed '
+                                           'mismatches.',
+
+                               'seq': 'Positional values for nucleotide '
+                                       'sequence data. This argument must be '
+                                       'passed as 3 comma-separated values. The '
+                                       'first item represents the (0-based) '
+                                       'expected start index of the sequence. '
+                                       'The second represents the length of the '
+                                       'sequence, and the third represents the '
+                                       'number of mismatches that are tolerated '
+                                       'for a sequence. An example is "--seq '
+                                       '43,90,2". This says that we start at '
+                                       '(0-based) index 43, grab the next 90 '
+                                       'characters, and if a perfect match is '
+                                       'not found for these grabbed characters '
+                                       'we look for a match to the designed '
+                                       'library sequences with up to two allowed'
+                                       'mismatches.',
+
+                               'read_per_loop': 'The number of fastq records read a time.'
+                                                'A higher value will result in more '
+                                                'memory usage by the program, but will '
+                                                'also result in fewer disk accesses, '
+                                                'increasing performance of the program.',
+                               'concatemer': 'Concatenated primer sequences. If this '
+                                             'concatemer is found within a read, we '
+                                             'know that a potential sequence from the '
+                                             'designed library was not included. The '
+                                             'number of times this concatemer is '
+                                             'recorded in the input file is reported.',
+                               'num_threads': 'The number of threads to use for analyses'
+                             },
     output_descriptions    = {},
     name = 'PepSIRF Demux',
     description = ( 'Description' )
