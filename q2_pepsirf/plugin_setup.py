@@ -35,10 +35,11 @@ plugin.methods.register_function(
                     'seq':           qiime2.plugin.Str,
                     'read_per_loop': qiime2.plugin.Int,
                     'num_threads'  : qiime2.plugin.Int,
-                    'concatemer'  :  qiime2.plugin.Str
+                    'concatemer'   :  qiime2.plugin.Str,
+                    'aa_counts'    :  qiime2.plugin.Str
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
-                ( 'aa_counts', FeatureTable[ Frequency ] )
+                ( 'aa_counts_o', FeatureTable[ Frequency ] )
               ],
     input_descriptions     = { 'library': 'Designed library containing nucleic acid'
                                           'peptides. Library should be in fasta '
@@ -152,10 +153,11 @@ plugin.methods.register_function(
                    'seq':           qiime2.plugin.Str,
                    'read_per_loop': qiime2.plugin.Int,
                    'num_threads'  : qiime2.plugin.Int,
-                   'concatemer'  :  qiime2.plugin.Str
+                   'concatemer'  :  qiime2.plugin.Str,
+                    'aa_counts'  :  qiime2.plugin.Str
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
-                ( 'aa_counts', FeatureTable[ Frequency ] )
+                ( 'aa_counts_o', FeatureTable[ Frequency ] )
               ],
     input_descriptions     = { 'library': 'Designed library containing nucleic acid'
                                           'peptides. Library should be in fasta '
