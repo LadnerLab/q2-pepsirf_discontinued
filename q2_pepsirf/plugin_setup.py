@@ -3,7 +3,9 @@ import qiime2.plugin
 import q2_pepsirf._demux
 import q2_pepsirf._deconv
 from q2_pepsirf._types import LinkedSpeciesPeptide
+from q2_pepsirf._types import SequenceNames
 from q2_pepsirf._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
+from q2_pepsirf._format import SequenceNamesFmt, SequenceNamesDirFmt
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.sample_data import SampleData
@@ -25,10 +27,13 @@ plugin = qiime2.plugin.Plugin(
     citations = None
 )
 
-plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt )
-plugin.register_semantic_types( LinkedSpeciesPeptide )
+plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt, SequenceNamesFmt, SequenceNamesDirFmt )
+plugin.register_semantic_types( LinkedSpeciesPeptide, SequenceNames )
 plugin.register_semantic_type_to_format( LinkedSpeciesPeptide,
                                          artifact_format = LinkedSpeciesPeptideDirFmt
+                                       )
+plugin.register_semantic_type_to_format( SequenceNames,
+                                         artifact_format = SequenceNamesDirFmt
                                        )
 
 plugin.methods.register_function(
@@ -47,7 +52,7 @@ plugin.methods.register_function(
     ),
     inputs = {
         'protein_file': FeatureData[ Sequence ],
-        'peptide_file': FeatureData[ Sequence ]
+        'peptide_file': SequenceNames
         },
     parameters = {
         'single_threaded': qiime2.plugin.Int % qiime2.plugin.Range(
