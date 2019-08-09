@@ -1,6 +1,9 @@
 import importlib
 import qiime2.plugin
 import q2_pepsirf._demux
+import q2_pepsirf._deconv
+from q2_pepsirf._types import LinkedSpeciesPeptide
+from q2_pepsirf._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.sample_data import SampleData
@@ -20,6 +23,52 @@ plugin = qiime2.plugin.Plugin(
                     'module and its commands.'
                   ),
     citations = None
+)
+
+plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt )
+plugin.register_semantic_types( LinkedSpeciesPeptide )
+plugin.register_semantic_type_to_format( LinkedSpeciesPeptide,
+                                         artifact_format = LinkedSpeciesPeptideDirFmt
+                                       )
+
+plugin.methods.register_function(
+    function = q2_pepsirf._deconv.create_linkage,
+    name = 'Create a linkage file for species deconvolution.',
+    description = ( 'This command will create the file that '
+                    'is used for species deconvolution. '
+                    'This file will contain a header followed '
+                    'one record per line. A record is a tab-delimited '
+                    'line where the first entry is the name '
+                    'of the peptide, and the second is a '
+                    'comma-separated list of species ids where each entry '
+                    'can be a colon-delimited pair with the first entry '
+                    'as the species id, and the second is the number of kmers '
+                    'the peptide shares with the species.'
+    ),
+    inputs = {
+        'protein_file': FeatureData[ Sequence ],
+        'peptide_file': FeatureData[ Sequence ]
+        },
+    parameters = {
+        'single_threaded': qiime2.plugin.Int % qiime2.plugin.Range(
+            0, 1, inclusive_start = True, inclusive_end = True ),
+
+        },
+    outputs = [ ( 'linked', LinkedSpeciesPeptide ) ],
+    input_descriptions = {
+        'protein_file': 'Name of fasta file containing protein '
+                        'sequences from which a design was '
+                        'created.',
+        'peptide_file': 'Name of fasta file containing amino acid '
+                        'peptides that have been designed as '
+                        'part of a library.'
+    },
+    parameter_descriptions = { 'single_threaded': 'By default this module uses two '
+                               'threads. Include this option with no '
+                               'arguments if you only want  one thread '
+                               'to be used.'
+    },
+    output_descriptions    = { 'linked': 'output' }
 )
 
 plugin.methods.register_function( 
