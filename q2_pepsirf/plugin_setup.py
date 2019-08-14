@@ -44,6 +44,91 @@ plugin.register_semantic_type_to_format( FeatureData[ProteinSequence],
                                        )
 
 plugin.methods.register_function(
+    function = q2_pepsirf._deconv.deconv,
+    name = 'Perform species deconvolution on a list of enriched peptides.',
+    description = (''),
+    inputs = {},
+    parameters = {
+        'single_threaded': qiime2.plugin.Bool,
+        'fractional_scoring': qiime2.plugin.Bool,
+        'summation_scoring': qiime2.plugin.Bool,
+        'score_filtering': qiime2.plugin.Bool
+        },
+
+    outputs = [ ( 'noop', LinkedSpeciesPeptide ) ],
+    input_descriptions = {},
+    parameter_descriptions = { 'single_threaded': 'By default this module uses two '
+                               'threads. Include this option with no '
+                               'arguments if you only want  one thread '
+                               'to be used.',
+
+                               'fractional_scoring': 'Use fractional instead of integer '
+                                                     'scoring. For integer scoring the score '
+                                                     'of each species is defined by the '
+                                                     'number of peptides that share a 7mer '
+                                                     'with that species. For fractional '
+                                                     'scoring the score of each species is '
+                                                     'defined by 1/n for each peptide, where '
+                                                     'n is the number of species a peptide '
+                                                     'shares a 7mer with. In this method of '
+                                                     'scoring peptides with fewer species are'
+                                                     'worth more. Note that if neither this '
+                                                     'flag nor --summation_scoring are '
+                                                     'included, integer scoring will be used.'
+                                                     'In integer scoring each species is '
+                                                     'scored by the number of peptides it '
+                                                     'shares a kmer with. ',
+
+                               'summation_scoring': 'Include this flag (without any '
+                                                    'arguments) if you want summation '
+                                                    'scoring to be used instead of '
+                                                    'fractional or integer scoring. For '
+                                                    'summation scoring, the --linked file '
+                                                    'passed must be of the form created by '
+                                                    '--create_linkage. This means a file of '
+                                                    'tab-delimited values, one per line. '
+                                                    'Each line is of the form peptide_name '
+                                                    'TAB id:score,id:score, and so on. '
+                                                    'Undefined behavior will result if input'
+                                                    'is not in this format. For summation '
+                                                    'scoring, each species is scored based '
+                                                    'on the number of kmers it shares with '
+                                                    'each peptide with which it shares a '
+                                                    'kmer.'
+                                                     'For example, assume a line in the '
+                                                    '--linked file looks like the following:\n'
+                                                    'peptide_1 TAB 123:4,543:8'
+                                                    'Both species "123" and "543" will '
+                                                    'receive a score of 4 and 8 '
+                                                    'respectively.Note that if neither this '
+                                                    'flag nor --summation_scoring are '
+                                                    'included, integer scoring will be used.'
+                                                    'In integer scoring each species is '
+                                                    'scored by the number of peptides it '
+                                                    'shares a kmer with.',
+
+                               'score_filtering': 'Include this flag if you want filtering '
+                                                  'to be done by the score of each '
+                                                  'species. Note that score is determined '
+                                                  'by the different flags specifying how a'
+                                                  'species should be scored. This means '
+                                                  'that any species whose score falls '
+                                                  'below --threshold will be removed from '
+                                                  'consideration. Note that for integer '
+                                                  'scoring, both score filtering and count'
+                                                  'filtering are the same. If this flag is'
+                                                  'not included, then any species whose '
+                                                  'count falls below --threshold will be '
+                                                  'removed from consideration. Score '
+                                                  'filtering is best suited for the '
+                                                  'summation scoring algorithm.'
+
+                               
+    },
+    output_descriptions = { }
+)
+
+plugin.methods.register_function(
     function = q2_pepsirf._deconv.create_linkage,
     name = 'Create a linkage file for species deconvolution.',
     description = ( 'This command will create the file that '
