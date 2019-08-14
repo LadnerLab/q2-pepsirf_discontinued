@@ -15,14 +15,19 @@ from q2_types.sample_data import SampleData
 from q2_types.per_sample_sequences import ( Sequences, FastqGzFormat )
 from q2_types.feature_data import DNAFASTAFormat
 from q2_types.multiplexed_sequences import MultiplexedSingleEndBarcodeInSequenceDirFmt
+
 from ._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from ._format import SequenceNamesFmt, SequenceNamesDirFmt
 from ._format import SequenceNamesFmt, SequenceNamesDirFmt
 from ._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 from ._format import TaxIdLineageFmt, TaxIdLineageDirFmt
+from ._format import EnrichedPeptideFmt, EnrichedPeptideDirFmt
 
 import qiime2.plugin
 
+def _run_cmd( cmd ):
+    cmd = [ str( item ) for item in cmd ]
+    return subprocess.check_output( cmd )
 
 def _mutually_exclusive( *args ):
     curr = False
@@ -36,6 +41,7 @@ def _add_if( lis, cond, *items ):
             lis.append( it )
 
 def deconv( linked: LinkedSpeciesPeptideFmt,
+            enriched: EnrichedPeptideFmt,
             threshold: qiime2.plugin.Int,
             single_threaded: qiime2.plugin.Bool = False,
             fractional_scoring: qiime2.plugin.Bool = False,
@@ -48,6 +54,7 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
 
     cmd = [ 'pep_sirf',
             'deconv',
+            '--enriched', str( enriched ),
             '--linked', str( linked ),
             '--threshold', threshold,
             '--score_tie_threshold', score_tie_threshold,
@@ -71,12 +78,10 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
     _add_if( cmd, fractional_scoring, '--fractional_scoring' )
     _add_if( cmd, summation_scoring, '--summation_scoring' )
     _add_if( cmd, id_name_map != None, '--id_name_map', str( id_name_map ) )
-    print( cmd )
 
     with tempfile.NamedTemporaryFile() as of:
         cmd += [ '--output', of.name ]
-        cmd = [ str( item ) for item in cmd ]
-        print( subprocess.check_output( cmd ).decode( 'ascii' ) )
+        print( _run_cmd( cmd ).decode( 'ascii' ) )
 
         output = pd.read_csv( of.name,
                               sep = '\t',
