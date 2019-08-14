@@ -52,7 +52,7 @@ plugin.methods.register_function(
         'single_threaded': qiime2.plugin.Bool,
         'fractional_scoring': qiime2.plugin.Bool,
         'summation_scoring': qiime2.plugin.Bool,
-        'score_filtering': qiime2.plugin.Bool
+        'score_filtering': qiime2.plugin.Bool,
         },
 
     outputs = [ ( 'noop', LinkedSpeciesPeptide ) ],
@@ -97,7 +97,7 @@ plugin.methods.register_function(
                                                     'kmer.'
                                                      'For example, assume a line in the '
                                                     '--linked file looks like the following:'
-                                                    'peptide_1 TAB 123:4,543:8'
+                                                    ' peptide_1 TAB 123:4,543:8 '
                                                     'Both species "123" and "543" will '
                                                     'receive a score of 4 and 8 '
                                                     'respectively.Note that if neither this '
@@ -174,14 +174,15 @@ plugin.methods.register_function(
         'reads':       MultiplexedSingleEndBarcodeInSequence,
         'barcodes':    FeatureData[ Sequence ]
     },
+    # TODO: Change index /seq location parameters
     parameters = { 'samplelist':     qiime2.plugin.Str,
-                    'f_index':       qiime2.plugin.Str,
-                    'r_index':       qiime2.plugin.Str,
-                    'seq':           qiime2.plugin.Str,
-                    'read_per_loop': qiime2.plugin.Int,
-                    'num_threads'  : qiime2.plugin.Int,
-                    'concatemer'   :  qiime2.plugin.Str,
-                    'aa_counts'    :  qiime2.plugin.Str
+                   'seq_location': qiime2.plugin.List[ qiime2.plugin.Int ],
+                   'f_index_location': qiime2.plugin.List[ qiime2.plugin.Int ], 
+                   'r_index_location': qiime2.plugin.List[ qiime2.plugin.Int ],
+                   'read_per_loop': qiime2.plugin.Int,
+                   'num_threads'  : qiime2.plugin.Int,
+                   'concatemer'   :  qiime2.plugin.Str,
+                   'aa_counts'    :  qiime2.plugin.Str
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
                 ( 'aa_counts_o', FeatureTable[ Frequency ] )
@@ -214,7 +215,7 @@ plugin.methods.register_function(
                                               'reverse (I2) index, and the third is the '
                                               'sample name. ',
 
-                               'f_index': 'Positional values for f_index. This '
+                               'f_index_location': 'Positional values for f_index. This '
                                            'argument must be passed as 3 '
                                            'comma-separated values. The first item '
                                            'represents the (0-based) expected start '
@@ -231,7 +232,7 @@ plugin.methods.register_function(
                                            'sequences with up to two allowed '
                                            'mismatches.',
 
-                               'r_index': 'Positional values for r_index. This '
+                               'r_index_location': 'Positional values for r_index. This '
                                           'argument must be passed as 3 '
                                            'comma-separated values. The first item '
                                            'represents the (0-based) expected start '
@@ -248,7 +249,7 @@ plugin.methods.register_function(
                                            'sequences with up to two allowed '
                                            'mismatches.',
 
-                               'seq': 'Positional values for nucleotide '
+                               'seq_location': 'Positional values for nucleotide '
                                        'sequence data. This argument must be '
                                        'passed as 3 comma-separated values. The '
                                        'first item represents the (0-based) '

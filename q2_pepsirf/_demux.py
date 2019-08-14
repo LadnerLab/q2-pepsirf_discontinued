@@ -20,14 +20,17 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
            library: DNAFASTAFormat,
            barcodes: DNAFASTAFormat,
            samplelist: qiime2.plugin.Str,
-           f_index: qiime2.plugin.Str,
-           seq:     qiime2.plugin.Str,
-           r_index: qiime2.plugin.Str = "",
+           seq_location: qiime2.plugin.List[ qiime2.plugin.Int ],
+           f_index_location: qiime2.plugin.List[ qiime2.plugin.Int ],
+           r_index_location: qiime2.plugin.List[ qiime2.plugin.Int ] = [ 0, 0, 0 ],
            num_threads: qiime2.plugin.Int = 2,
            read_per_loop: qiime2.plugin.Int = 800000,
            concatemer: qiime2.plugin.Str = "",
            aa_counts: qiime2.plugin.Str = ""
          ) -> ( pd.DataFrame, pd.DataFrame  ):
+
+    count_to_str = lambda x: ','.join( [ str( item ) for item in x ] )
+
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
 
@@ -43,8 +46,8 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
     cmd = [ 'pep_sirf',
             'demux',
             '--input_r1', temp_in.name,
-            '--f_index', f_index,
-            '--seq',     seq,
+            '--f_index', count_to_str( f_index_location ),
+            '--seq',     count_to_str( seq_location ),
             '--library', str( library ),
             '--read_per_loop', str( read_per_loop ),
             '--output', tsv_count_out.name,
@@ -53,7 +56,7 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--num_threads', str( num_threads )
             ]
     if r_index:
-        cmd += [ '--r_index', r_index ]
+        cmd += [ '--r_index', count_to_str( r_index_location ) ]
     if concatemer:
         cmd += [ '--concatemer', concatemer ]
     if aa_counts:
