@@ -83,11 +83,16 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
         cmd += [ '--output', of.name ]
         print( _run_cmd( cmd ).decode( 'ascii' ) )
 
-        output = pd.read_csv( of.name,
-                              sep = '\t',
-                              index_col = 'Sequence name'
-                            )
-
+        try:
+            output = pd.read_csv( of.name,
+                                  sep = '\t',
+                                  index_col = 'Species Name'
+                                )
+        except ValueError:
+             output = pd.read_csv( of.name,
+                                  sep = '\t',
+                                  index_col = 'Species ID'
+                                )
     return output
 
 def create_linkage( protein_file : ProteinSequenceFmt,
