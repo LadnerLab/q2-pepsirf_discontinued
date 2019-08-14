@@ -6,12 +6,16 @@ from q2_pepsirf._types import LinkedSpeciesPeptide, ProteinSequence
 from q2_pepsirf._types import SequenceNames
 from q2_pepsirf._types import TaxIdLineage
 from q2_pepsirf._types import EnrichedPeptide
+from q2_pepsirf._types import DeconvolutedSpecies
 
 from q2_pepsirf._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from q2_pepsirf._format import SequenceNamesFmt, SequenceNamesDirFmt
 from q2_pepsirf._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 from q2_pepsirf._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 from q2_pepsirf._format import EnrichedPeptideFmt, EnrichedPeptideDirFmt
+from q2_pepsirf._format import DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt
+
+
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.sample_data import SampleData
@@ -37,15 +41,20 @@ plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt,
                          SequenceNamesFmt, SequenceNamesDirFmt,
                          ProteinSequenceFmt, ProteinSequenceDirFmt,
                          TaxIdLineageFmt, TaxIdLineageDirFmt,
-                         EnrichedPeptideFmt, EnrichedPeptideDirFmt
+                         EnrichedPeptideFmt, EnrichedPeptideDirFmt,
+                         DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt
                        )
 plugin.register_semantic_types( LinkedSpeciesPeptide,
                                 SequenceNames,
                                 ProteinSequence,
                                 TaxIdLineage,
-                                EnrichedPeptide
+                                EnrichedPeptide,
+                                DeconvolutedSpecies
                               )
 
+plugin.register_semantic_type_to_format( FeatureTable[ DeconvolutedSpecies ],
+                                         artifact_format = DeconvolutedSpeciesDirFmt
+                                       )
 plugin.register_semantic_type_to_format( LinkedSpeciesPeptide,
                                          artifact_format = LinkedSpeciesPeptideDirFmt
                                        )
@@ -77,7 +86,7 @@ plugin.methods.register_function(
         'threshold': qiime2.plugin.Int
         },
 
-    outputs = [ ( 'enriched_species', FeatureTable[ Frequency ] ) ],
+    outputs = [ ( 'enriched_species', FeatureTable[ DeconvolutedSpecies ] ) ],
     input_descriptions = { 'linked': 'Name of file containing peptide to species linkages.' },
     parameter_descriptions = { 'single_threaded': 'By default this module uses two '
                                'threads. Include this option with no '

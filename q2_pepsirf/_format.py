@@ -135,3 +135,16 @@ EnrichedPeptideDirFmt = model.SingleFileDirectoryFormat( 'EnrichedPeptideDirFmt'
                                                          'peptides.txt',
                                                          EnrichedPeptideFmt
                                                        )
+
+class DeconvolutedSpeciesFmt( model.TextFileFormat ):
+    def _check_n_records( self, n ):
+        pass
+
+    def _validate_( self, level ):
+        record_count_map = { 'min': 5, 'max': np.inf }
+        self._check_n_records( record_count_map[ level ] )
+        
+DeconvolutedSpeciesDirFmt = model.SingleFileDirectoryFormat( 'DeconvolutedSpeciesDirFmt',
+                                                             'deconv_species.tsv',
+                                                             DeconvolutedSpeciesFmt
+                                                           )
