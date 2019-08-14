@@ -62,8 +62,7 @@ plugin.methods.register_function(
         'peptide_file': FeatureData[ ProteinSequence ]
         },
     parameters = {
-        'single_threaded': qiime2.plugin.Int % qiime2.plugin.Range(
-            0, 1, inclusive_start = True, inclusive_end = True ),
+        'single_threaded': qiime2.plugin.Bool,
         'kmer_size': qiime2.plugin.Int
         },
     outputs = [ ( 'linked', LinkedSpeciesPeptide ) ],
