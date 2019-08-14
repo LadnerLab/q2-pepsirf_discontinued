@@ -19,6 +19,7 @@ from ._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from ._format import SequenceNamesFmt, SequenceNamesDirFmt
 from ._format import SequenceNamesFmt, SequenceNamesDirFmt
 from ._format import ProteinSequenceFmt, ProteinSequenceDirFmt
+from ._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 
 import qiime2.plugin
 
@@ -30,7 +31,8 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             summation_scoring: qiime2.plugin.Bool = False,
             score_filtering: qiime2.plugin.Bool = False,
             score_tie_threshold: qiime2.plugin.Float = 0.0,
-            score_overlap_threshold: qiime2.plugin.Float = 0.0
+            score_overlap_threshold: qiime2.plugin.Float = 0.0,
+            id_name_map: TaxIdLineageFmt = None
           ) -> ( LinkedSpeciesPeptideFmt ):
     pass
 

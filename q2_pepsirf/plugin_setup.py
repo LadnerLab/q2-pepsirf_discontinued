@@ -56,7 +56,9 @@ plugin.methods.register_function(
     function = q2_pepsirf._deconv.deconv,
     name = 'Perform species deconvolution on a list of enriched peptides.',
     description = (''),
-    inputs = { 'linked':  LinkedSpeciesPeptide },
+    inputs = { 'linked':  LinkedSpeciesPeptide,
+               'id_name_map': TaxIdLineage
+    },
     parameters = {
         'single_threaded': qiime2.plugin.Bool,
         'fractional_scoring': qiime2.plugin.Bool,
