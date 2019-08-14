@@ -57,7 +57,7 @@ plugin.register_semantic_type_to_format( FeatureData[ProteinSequence],
                                        )
 plugin.register_semantic_type_to_format( TaxIdLineage, artifact_format = TaxIdLineageDirFmt )
 
-plugin.register_semantic_type_to_format( EnrichedPeptide, artifact_format = TaxIdLineageDirFmt )
+plugin.register_semantic_type_to_format( EnrichedPeptide, artifact_format = EnrichedPeptideDirFmt )
 
 plugin.methods.register_function(
     function = q2_pepsirf._deconv.deconv,
