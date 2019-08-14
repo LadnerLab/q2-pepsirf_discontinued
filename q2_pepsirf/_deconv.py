@@ -70,14 +70,18 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
     _add_if( cmd, single_threaded, '--single_threaded' )
     _add_if( cmd, fractional_scoring, '--fractional_scoring' )
     _add_if( cmd, summation_scoring, '--summation_scoring' )
-    _add_if( cmd, id_name_map != None, '--id_name_map', id_name_map )
-
+    _add_if( cmd, id_name_map != None, '--id_name_map', str( id_name_map ) )
     print( cmd )
 
-    output = pd.read_csv( 'out_fn',
-                          sep = '\t',
-                          index_col = 'S'
-                        )
+    with tempfile.NamedTemporaryFile() as of:
+        cmd += [ '--output', of.name ]
+        cmd = [ str( item ) for item in cmd ]
+        print( subprocess.check_output( cmd ).decode( 'ascii' ) )
+
+        output = pd.read_csv( of.name,
+                              sep = '\t',
+                              index_col = 'Sequence name'
+                            )
 
     return output
 
