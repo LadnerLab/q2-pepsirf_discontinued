@@ -26,7 +26,9 @@ import qiime2.plugin
 def deconv( single_threaded: qiime2.plugin.Bool = False,
             fractional_scoring: qiime2.plugin.Bool = False,
             summation_scoring: qiime2.plugin.Bool = False,
-            score_filtering: qiime2.plugin.Bool = False
+            score_filtering: qiime2.plugin.Bool = False,
+            score_tie_threshold: qiime2.plugin.Float = 0.0,
+            score_overlap_threshold: qiime2.plugin.Float = 0.0
           ) -> ( LinkedSpeciesPeptideFmt ):
     pass
 

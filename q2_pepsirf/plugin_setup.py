@@ -53,6 +53,8 @@ plugin.methods.register_function(
         'fractional_scoring': qiime2.plugin.Bool,
         'summation_scoring': qiime2.plugin.Bool,
         'score_filtering': qiime2.plugin.Bool,
+        'score_tie_threshold': qiime2.plugin.Float,
+        'score_overlap_threshold': qiime2.plugin.Float
         },
 
     outputs = [ ( 'noop', LinkedSpeciesPeptide ) ],
@@ -121,8 +123,66 @@ plugin.methods.register_function(
                                                   'count falls below --threshold will be '
                                                   'removed from consideration. Score '
                                                   'filtering is best suited for the '
-                                                  'summation scoring algorithm.'
+                                                  'summation scoring algorithm.',
+                               'score_tie_threshold': 'Threshold for two species to be '
+                                                      'evaluated as a tie. Note that this '
+                                                      'value can be either an integer or a '
+                                                      'ratio that is in (0,1). When provided '
+                                                      'as an integer this value dictates the '
+                                                      'difference in score that is allowed for'
+                                                      'two species to be considered. For '
+                                                      'example, if this flag is provided with '
+                                                      'the value 0, then two or more species '
+                                                      'must have the exact same score to be '
+                                                      'tied. If this flag is provided with the'
+                                                      'value 4, then the scores of species '
+                                                      'must be no greater than 4 to be '
+                                                      'considered tied. So if species 1has a '
+                                                      'score of 5, and species has a score '
+                                                      'anywhere between the integer values in '
+                                                      '[1,9], then these species will be '
+                                                      'considered tied, and their tie will be '
+                                                      'evaluated as dicated by the tie '
+                                                      'evaluation strategy provided.If the '
+                                                      'argument provided to this flag is in '
+                                                      '(0, 1), then a species must have at '
+                                                      'least this percentage of the species '
+                                                      'with the maximum score to be tied. So '
+                                                      'if species 1 has the highest score with'
+                                                      'a score of 9, and species 2 has a score'
+                                                      'of 5, then this flag must be provided '
+                                                      'with value >= 4/5 = 0.8 for the species'
+                                                      'to be considered tied. Note that any '
+                                                      'values provided to this flag that are '
+                                                      'in the set { x: x >= 1 } - Z, where Z '
+                                                      'is the set of integers, will result in '
+                                                      'an error. So 4.45 is not a valid value,'
+                                                      'but both 4 and 0.45 are. ',
 
+                               'score_overlap_threshold' : 'Once two species have been found to be '
+                                                           'within "score_tie_threshold" number of '
+                                                           'peptides of one another, they are then '
+                                                           'evaluated as a tie. For a two-way tie '
+                                                           'where integer tie evaluation is used, '
+                                                           'if the species share more than '
+                                                           'score_overlap_threshold number of '
+                                                           'peptides, then they are both reported. '
+                                                           'An example value is 10. For ratio tie '
+                                                           'evaluation, which is used when this '
+                                                           'argument is provided with a value in '
+                                                           'the interval (0,1), two species must '
+                                                           'share at leat this amount of peptides '
+                                                           'with each other. For example, suppose '
+                                                           'species 1 shares 0.5 of its peptides '
+                                                           'with species 2, but species 2 only '
+                                                           'shares 0.1 of its peptides with species'
+                                                           '1. To use integer tie evaluation, where'
+                                                           'species must share an integer number of'
+                                                           'peptides, not a ratio of their total '
+                                                           'peptides, provide this argument with a '
+                                                           'value in the interval [1, inf). These '
+                                                           'two will only be reported together if '
+                                                           'score_overlap_threshold <= 0.1. '
                                
     },
     output_descriptions = { }
