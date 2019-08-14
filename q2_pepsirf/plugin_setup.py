@@ -47,7 +47,7 @@ plugin.methods.register_function(
     function = q2_pepsirf._deconv.deconv,
     name = 'Perform species deconvolution on a list of enriched peptides.',
     description = (''),
-    inputs = {},
+    inputs = { 'linked':  LinkedSpeciesPeptide },
     parameters = {
         'single_threaded': qiime2.plugin.Bool,
         'fractional_scoring': qiime2.plugin.Bool,
@@ -55,10 +55,11 @@ plugin.methods.register_function(
         'score_filtering': qiime2.plugin.Bool,
         'score_tie_threshold': qiime2.plugin.Float,
         'score_overlap_threshold': qiime2.plugin.Float
+        'threshold': qiime2.plugin.Int
         },
 
     outputs = [ ( 'noop', LinkedSpeciesPeptide ) ],
-    input_descriptions = {},
+    input_descriptions = { 'linked': 'Name of file containing peptide to species linkages.' },
     parameter_descriptions = { 'single_threaded': 'By default this module uses two '
                                'threads. Include this option with no '
                                'arguments if you only want  one thread '
@@ -237,7 +238,7 @@ plugin.methods.register_function(
     # TODO: Change index /seq location parameters
     parameters = { 'samplelist':     qiime2.plugin.Str,
                    'seq_location': qiime2.plugin.List[ qiime2.plugin.Int ],
-                   'f_index_location': qiime2.plugin.List[ qiime2.plugin.Int ], 
+                   'f_index_location': qiime2.plugin.List[ qiime2.plugin.Int ],
                    'r_index_location': qiime2.plugin.List[ qiime2.plugin.Int ],
                    'read_per_loop': qiime2.plugin.Int,
                    'num_threads'  : qiime2.plugin.Int,
@@ -358,9 +359,9 @@ plugin.methods.register_function(
                    'r_index':       qiime2.plugin.Str,
                    'seq':           qiime2.plugin.Str,
                    'read_per_loop': qiime2.plugin.Int,
-                   'num_threads'  : qiime2.plugin.Int,
-                   'concatemer'  :  qiime2.plugin.Str,
-                    'aa_counts'  :  qiime2.plugin.Str
+                   'num_threads': qiime2.plugin.Int,
+                   'concatemer':  qiime2.plugin.Str,
+                   'aa_counts':  qiime2.plugin.Str
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
                 ( 'aa_counts_o', FeatureTable[ Frequency ] )

@@ -23,7 +23,9 @@ from ._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 import qiime2.plugin
 
 
-def deconv( single_threaded: qiime2.plugin.Bool = False,
+def deconv( linked: LinkedSpeciesPeptideFmt,
+            threshold: qiime2.plugin.Int,
+            single_threaded: qiime2.plugin.Bool = False,
             fractional_scoring: qiime2.plugin.Bool = False,
             summation_scoring: qiime2.plugin.Bool = False,
             score_filtering: qiime2.plugin.Bool = False,
