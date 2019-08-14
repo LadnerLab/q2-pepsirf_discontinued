@@ -96,7 +96,7 @@ plugin.methods.register_function(
                                                     'each peptide with which it shares a '
                                                     'kmer.'
                                                      'For example, assume a line in the '
-                                                    '--linked file looks like the following:\n'
+                                                    '--linked file looks like the following:'
                                                     'peptide_1 TAB 123:4,543:8'
                                                     'Both species "123" and "543" will '
                                                     'receive a score of 4 and 8 '
