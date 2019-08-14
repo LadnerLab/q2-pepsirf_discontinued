@@ -113,3 +113,25 @@ TaxIdLineageDirFmt = model.SingleFileDirectoryFormat( 'TaxIdLineageDirFmt',
                                                       'lineage.dmp',
                                                       TaxIdLineageFmt
                                                     )
+
+class EnrichedPeptideFmt( model.TextFileFormat ):
+    def _check_n_records( self, n ):
+        with open( str( self ), 'r' ) as of:
+            for lineno, line in enumerate( of ):
+                if lineno == n:
+                    break
+                if len( line.strip() ) == 0:
+                    raise ValueError( 'Error on line %d: '
+                                      'Enriched peptide file must'
+                                      'contain one name per line!'
+                                      % ( lineno + 1 )
+                                    )
+
+    def _validate_( self, level ):
+        record_count_map = { 'min': 5, 'max': np.inf }
+        self._check_n_records( record_count_map[ level ] )
+
+EnrichedPeptideDirFmt = model.SingleFileDirectoryFormat( 'EnrichedPeptideDirFmt',
+                                                         'peptides.txt',
+                                                         EnrichedPeptideFmt
+                                                       )

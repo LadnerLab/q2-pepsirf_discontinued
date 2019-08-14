@@ -7,3 +7,4 @@ SequenceNames = SemanticType( 'SequenceNames' )
 ProteinSequence = SemanticType( 'ProteinSequence',
                                 variant_of = FeatureData.field[ 'type']
                               )
+EnrichedPeptide = SemanticType( 'EnrichedPeptide' )
