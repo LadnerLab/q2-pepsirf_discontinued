@@ -24,6 +24,17 @@ from ._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 import qiime2.plugin
 
 
+def _mutually_exclusive( *args ):
+    curr = False
+    for cond in args:
+        curr = curr ^ cond
+    return curr 
+
+def _add_if( lis, cond, *items ):
+    if cond:
+        for it in items:
+            lis.append( it )
+
 def deconv( linked: LinkedSpeciesPeptideFmt,
             threshold: qiime2.plugin.Int,
             single_threaded: qiime2.plugin.Bool = False,
@@ -31,10 +42,44 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             summation_scoring: qiime2.plugin.Bool = False,
             score_filtering: qiime2.plugin.Bool = False,
             score_tie_threshold: qiime2.plugin.Float = 0.0,
-            score_overlap_threshold: qiime2.plugin.Float = 0.0,
+            score_overlap_threshold: qiime2.plugin.Float = 1.0,
             id_name_map: TaxIdLineageFmt = None
           ) -> ( pd.DataFrame ):
-    return pd.DataFrame()
+
+    cmd = [ 'pep_sirf',
+            'deconv',
+            '--linked', str( linked ),
+            '--threshold', threshold,
+            '--score_tie_threshold', score_tie_threshold,
+            '--score_overlap_threshold', score_overlap_threshold,
+          ]
+
+    
+    if not _mutually_exclusive( fractional_scoring,
+                                summation_scoring,
+                                not( fractional_scoring    #represents integer scoring
+                                     or summation_scoring
+                                   )
+                              ):
+        raise ValueError( 'Either fractional_scoring, summation_scoring, '
+                          'or neither must be included (Which means integer '
+                          'scoring is used). You have provided '
+                          'both fractional_scoring and summation_scoring.'
+                        )
+        
+    _add_if( cmd, single_threaded, '--single_threaded' )
+    _add_if( cmd, fractional_scoring, '--fractional_scoring' )
+    _add_if( cmd, summation_scoring, '--summation_scoring' )
+    _add_if( cmd, id_name_map != None, '--id_name_map', id_name_map )
+
+    print( cmd )
+
+    output = pd.read_csv( 'out_fn',
+                          sep = '\t',
+                          index_col = 'S'
+                        )
+
+    return output
 
 def create_linkage( protein_file : ProteinSequenceFmt,
                     peptide_file: ProteinSequenceFmt,
