@@ -69,7 +69,7 @@ plugin.methods.register_function(
         'threshold': qiime2.plugin.Int
         },
 
-    outputs = [ ( 'noop', LinkedSpeciesPeptide ) ],
+    outputs = [ ( 'enriched_species', FeatureTable[ Frequency ] ) ],
     input_descriptions = { 'linked': 'Name of file containing peptide to species linkages.' },
     parameter_descriptions = { 'single_threaded': 'By default this module uses two '
                                'threads. Include this option with no '

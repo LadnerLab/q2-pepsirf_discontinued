@@ -33,8 +33,8 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             score_tie_threshold: qiime2.plugin.Float = 0.0,
             score_overlap_threshold: qiime2.plugin.Float = 0.0,
             id_name_map: TaxIdLineageFmt = None
-          ) -> ( LinkedSpeciesPeptideFmt ):
-    pass
+          ) -> ( pd.DataFrame ):
+    return pd.DataFrame()
 
 def create_linkage( protein_file : ProteinSequenceFmt,
                     peptide_file: ProteinSequenceFmt,
