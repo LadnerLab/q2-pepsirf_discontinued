@@ -82,3 +82,34 @@ ProteinSequenceDirFmt = model.SingleFileDirectoryFormat( 'ProteinSequenceDirFmt'
                                                          'sequences.fasta',
                                                          ProteinSequenceFmt
                                                        )
+
+class TaxIdLineageFmt( model.TextFileFormat ):
+    def _check_n_records( self, n ):
+        with open( str( self ), 'r' ) as of:
+            for lineno, line in enumerate( of ):
+                if lineno == n:
+                    return True
+
+                else:
+                    spl = line.split( '|' )
+                    if len( spl ) == 0:
+                        raise ValueError( 'Error on line %d: '
+                                          'TaxIdLineage file must have one or more '
+                                          'values separated by the "|" delimiter.' % ( lineno + 1 )
+                                        )
+                    try:
+                        id = int( spl[ 0 ].strip() )
+                    except:
+                        raise ValueError( 'Error on line %d: '
+                                          'The first item in each line must be '
+                                          'the id for a species.' % ( lineno + 1 )
+                                        )
+
+    def _validate_( self, level ):
+        record_count_map = { 'min': 5, 'max': np.inf }
+        self._check_n_records( record_count_map[ level ] )
+
+TaxIdLineageDirFmt = model.SingleFileDirectoryFormat( 'TaxIdLineageDirFmt',
+                                                      'lineage.dmp',
+                                                      TaxIdLineageFmt
+                                                    )

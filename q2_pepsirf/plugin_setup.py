@@ -4,9 +4,11 @@ import q2_pepsirf._demux
 import q2_pepsirf._deconv
 from q2_pepsirf._types import LinkedSpeciesPeptide, ProteinSequence
 from q2_pepsirf._types import SequenceNames
+from q2_pepsirf._types import TaxIdLineage
 from q2_pepsirf._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from q2_pepsirf._format import SequenceNamesFmt, SequenceNamesDirFmt
 from q2_pepsirf._format import ProteinSequenceFmt, ProteinSequenceDirFmt
+from q2_pepsirf._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.sample_data import SampleData
@@ -30,9 +32,15 @@ plugin = qiime2.plugin.Plugin(
 
 plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt,
                          SequenceNamesFmt, SequenceNamesDirFmt,
-                         ProteinSequenceFmt, ProteinSequenceDirFmt
+                         ProteinSequenceFmt, ProteinSequenceDirFmt,
+                         TaxIdLineageFmt, TaxIdLineageDirFmt
                        )
-plugin.register_semantic_types( LinkedSpeciesPeptide, SequenceNames, ProteinSequence )
+plugin.register_semantic_types( LinkedSpeciesPeptide,
+                                SequenceNames,
+                                ProteinSequence,
+                                TaxIdLineage
+                              )
+
 plugin.register_semantic_type_to_format( LinkedSpeciesPeptide,
                                          artifact_format = LinkedSpeciesPeptideDirFmt
                                        )
@@ -42,6 +50,7 @@ plugin.register_semantic_type_to_format( SequenceNames,
 plugin.register_semantic_type_to_format( FeatureData[ProteinSequence],
                                          artifact_format = ProteinSequenceDirFmt
                                        )
+plugin.register_semantic_type_to_format( TaxIdLineage, artifact_format = TaxIdLineageDirFmt )
 
 plugin.methods.register_function(
     function = q2_pepsirf._deconv.deconv,
@@ -54,7 +63,7 @@ plugin.methods.register_function(
         'summation_scoring': qiime2.plugin.Bool,
         'score_filtering': qiime2.plugin.Bool,
         'score_tie_threshold': qiime2.plugin.Float,
-        'score_overlap_threshold': qiime2.plugin.Float
+        'score_overlap_threshold': qiime2.plugin.Float,
         'threshold': qiime2.plugin.Int
         },
 
