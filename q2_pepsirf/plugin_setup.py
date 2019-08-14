@@ -5,10 +5,13 @@ import q2_pepsirf._deconv
 from q2_pepsirf._types import LinkedSpeciesPeptide, ProteinSequence
 from q2_pepsirf._types import SequenceNames
 from q2_pepsirf._types import TaxIdLineage
+from q2_pepsirf._types import EnrichedPeptide
+
 from q2_pepsirf._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from q2_pepsirf._format import SequenceNamesFmt, SequenceNamesDirFmt
 from q2_pepsirf._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 from q2_pepsirf._format import TaxIdLineageFmt, TaxIdLineageDirFmt
+from q2_pepsirf._format import EnrichedPeptideFmt, EnrichedPeptideDirFmt
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.sample_data import SampleData
@@ -33,12 +36,14 @@ plugin = qiime2.plugin.Plugin(
 plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt,
                          SequenceNamesFmt, SequenceNamesDirFmt,
                          ProteinSequenceFmt, ProteinSequenceDirFmt,
-                         TaxIdLineageFmt, TaxIdLineageDirFmt
+                         TaxIdLineageFmt, TaxIdLineageDirFmt,
+                         EnrichedPeptideFmt, EnrichedPeptideDirFmt
                        )
 plugin.register_semantic_types( LinkedSpeciesPeptide,
                                 SequenceNames,
                                 ProteinSequence,
-                                TaxIdLineage
+                                TaxIdLineage,
+                                EnrichedPeptide
                               )
 
 plugin.register_semantic_type_to_format( LinkedSpeciesPeptide,
@@ -52,12 +57,15 @@ plugin.register_semantic_type_to_format( FeatureData[ProteinSequence],
                                        )
 plugin.register_semantic_type_to_format( TaxIdLineage, artifact_format = TaxIdLineageDirFmt )
 
+plugin.register_semantic_type_to_format( EnrichedPeptide, artifact_format = TaxIdLineageDirFmt )
+
 plugin.methods.register_function(
     function = q2_pepsirf._deconv.deconv,
     name = 'Perform species deconvolution on a list of enriched peptides.',
     description = (''),
     inputs = { 'linked':  LinkedSpeciesPeptide,
-               'id_name_map': TaxIdLineage
+               'id_name_map': TaxIdLineage,
+               'enriched': EnrichedPeptide
     },
     parameters = {
         'single_threaded': qiime2.plugin.Bool,
