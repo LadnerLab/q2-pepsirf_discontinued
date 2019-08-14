@@ -22,6 +22,7 @@ from ._format import SequenceNamesFmt, SequenceNamesDirFmt
 from ._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 from ._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 from ._format import EnrichedPeptideFmt, EnrichedPeptideDirFmt
+from ._format import DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt
 
 import qiime2.plugin
 
@@ -50,7 +51,7 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             score_tie_threshold: qiime2.plugin.Float = 0.0,
             score_overlap_threshold: qiime2.plugin.Float = 1.0,
             id_name_map: TaxIdLineageFmt = None
-          ) -> ( pd.DataFrame ):
+          ) -> ( DeconvolutedSpeciesFmt ):
 
     cmd = [ 'pep_sirf',
             'deconv',
@@ -60,7 +61,7 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             '--score_tie_threshold', score_tie_threshold,
             '--score_overlap_threshold', score_overlap_threshold,
           ]
-
+    output = DeconvolutedSpeciesFmt()
     
     if not _mutually_exclusive( fractional_scoring,
                                 summation_scoring,
@@ -79,20 +80,8 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
     _add_if( cmd, summation_scoring, '--summation_scoring' )
     _add_if( cmd, id_name_map != None, '--id_name_map', str( id_name_map ) )
 
-    with tempfile.NamedTemporaryFile() as of:
-        cmd += [ '--output', of.name ]
-        print( _run_cmd( cmd ).decode( 'ascii' ) )
-
-        try:
-            output = pd.read_csv( of.name,
-                                  sep = '\t',
-                                  index_col = 'Species Name'
-                                )
-        except ValueError:
-             output = pd.read_csv( of.name,
-                                  sep = '\t',
-                                  index_col = 'Species ID'
-                                )
+    cmd += [ '--output', str( output ) ]
+    print( _run_cmd( cmd ).decode( 'ascii' ) )
     return output
 
 def create_linkage( protein_file : ProteinSequenceFmt,
