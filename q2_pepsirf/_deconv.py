@@ -23,6 +23,7 @@ from ._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 from ._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 from ._format import EnrichedPeptideFmt, EnrichedPeptideDirFmt
 from ._format import DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt
+from ._format import SpeciesAssignMapFmt, SpeciesAssignMapDirFmt
 
 import qiime2.plugin
 
@@ -51,7 +52,9 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             score_tie_threshold: qiime2.plugin.Float = 0.0,
             score_overlap_threshold: qiime2.plugin.Float = 1.0,
             id_name_map: TaxIdLineageFmt = None
-          ) -> ( DeconvolutedSpeciesFmt ):
+          ) -> ( DeconvolutedSpeciesFmt, SpeciesAssignMapFmt ):
+
+    outputs = ( DeconvolutedSpeciesFmt(), SpeciesAssignMapFmt() )
 
     cmd = [ 'pep_sirf',
             'deconv',
@@ -60,8 +63,8 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
             '--threshold', threshold,
             '--score_tie_threshold', score_tie_threshold,
             '--score_overlap_threshold', score_overlap_threshold,
+            '--peptide_assignment_map', str( outputs[ 1 ] )
           ]
-    output = DeconvolutedSpeciesFmt()
     
     if not _mutually_exclusive( fractional_scoring,
                                 summation_scoring,
@@ -80,9 +83,9 @@ def deconv( linked: LinkedSpeciesPeptideFmt,
     _add_if( cmd, summation_scoring, '--summation_scoring' )
     _add_if( cmd, id_name_map != None, '--id_name_map', str( id_name_map ) )
 
-    cmd += [ '--output', str( output ) ]
+    cmd += [ '--output', str( outputs[ 0 ] ) ]
     print( _run_cmd( cmd ).decode( 'ascii' ) )
-    return output
+    return outputs
 
 def create_linkage( protein_file : ProteinSequenceFmt,
                     peptide_file: ProteinSequenceFmt,

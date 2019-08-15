@@ -7,6 +7,7 @@ from q2_pepsirf._types import SequenceNames
 from q2_pepsirf._types import TaxIdLineage
 from q2_pepsirf._types import EnrichedPeptide
 from q2_pepsirf._types import DeconvolutedSpecies
+from q2_pepsirf._types import SpeciesAssignMap
 
 from q2_pepsirf._format import LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt
 from q2_pepsirf._format import SequenceNamesFmt, SequenceNamesDirFmt
@@ -14,6 +15,7 @@ from q2_pepsirf._format import ProteinSequenceFmt, ProteinSequenceDirFmt
 from q2_pepsirf._format import TaxIdLineageFmt, TaxIdLineageDirFmt
 from q2_pepsirf._format import EnrichedPeptideFmt, EnrichedPeptideDirFmt
 from q2_pepsirf._format import DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt
+from q2_pepsirf._format import SpeciesAssignMapFmt, SpeciesAssignMapDirFmt
 
 
 from q2_types.feature_data import FeatureData, Sequence
@@ -42,14 +44,16 @@ plugin.register_formats( LinkedSpeciesPeptideFmt, LinkedSpeciesPeptideDirFmt,
                          ProteinSequenceFmt, ProteinSequenceDirFmt,
                          TaxIdLineageFmt, TaxIdLineageDirFmt,
                          EnrichedPeptideFmt, EnrichedPeptideDirFmt,
-                         DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt
+                         DeconvolutedSpeciesFmt, DeconvolutedSpeciesDirFmt,
+                         SpeciesAssignMapFmt, SpeciesAssignMapDirFmt
                        )
 plugin.register_semantic_types( LinkedSpeciesPeptide,
                                 SequenceNames,
                                 ProteinSequence,
                                 TaxIdLineage,
                                 EnrichedPeptide,
-                                DeconvolutedSpecies
+                                DeconvolutedSpecies,
+                                SpeciesAssignMap
                               )
 
 plugin.register_semantic_type_to_format( FeatureTable[ DeconvolutedSpecies ],
@@ -68,10 +72,12 @@ plugin.register_semantic_type_to_format( TaxIdLineage, artifact_format = TaxIdLi
 
 plugin.register_semantic_type_to_format( EnrichedPeptide, artifact_format = EnrichedPeptideDirFmt )
 
+plugin.register_semantic_type_to_format( SpeciesAssignMap, artifact_format = SpeciesAssignMapDirFmt )
+
 plugin.methods.register_function(
     function = q2_pepsirf._deconv.deconv,
     name = 'Perform species deconvolution on a list of enriched peptides.',
-    description = (''),
+    description = ( '' ),
     inputs = { 'linked':  LinkedSpeciesPeptide,
                'id_name_map': TaxIdLineage,
                'enriched': EnrichedPeptide
@@ -86,8 +92,12 @@ plugin.methods.register_function(
         'threshold': qiime2.plugin.Int
         },
 
-    outputs = [ ( 'enriched_species', FeatureTable[ DeconvolutedSpecies ] ) ],
+    outputs = [ ( 'enriched_species', FeatureTable[ DeconvolutedSpecies ] ),
+                ( 'peptide_assign_map', SpeciesAssignMap ) 
+    ],
+
     input_descriptions = { 'linked': 'Name of file containing peptide to species linkages.' },
+
     parameter_descriptions = { 'single_threaded': 'By default this module uses two '
                                'threads. Include this option with no '
                                'arguments if you only want  one thread '
