@@ -180,6 +180,7 @@ plugin.methods.register_function(
                                                   'removed from consideration. Score '
                                                   'filtering is best suited for the '
                                                   'summation scoring algorithm.',
+
                                'score_tie_threshold': 'Threshold for two species to be '
                                                       'evaluated as a tie. Note that this '
                                                       'value can be either an integer or a '
@@ -312,10 +313,10 @@ plugin.methods.register_function(
                    'read_per_loop': qiime2.plugin.Int,
                    'num_threads'  : qiime2.plugin.Int,
                    'concatemer'   :  qiime2.plugin.Str,
-                   'aa_counts'    :  qiime2.plugin.Str
+                   'nt_level_counts': qiime2.plugin.Bool
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
-                ( 'aa_counts_o', FeatureTable[ Frequency ] )
+                ( 'aa_counts', FeatureTable[ Frequency ] )
               ],
     input_descriptions     = { 'library': 'Designed library containing nucleic acid'
                                           'peptides. Library should be in fasta '
@@ -347,14 +348,14 @@ plugin.methods.register_function(
 
                                'f_index_location': 'Positional values for f_index. This '
                                            'argument must be passed as 3 '
-                                           'comma-separated values. The first item '
+                                           'space-separated values. The first item '
                                            'represents the (0-based) expected start '
                                            'index of the forward index. The second '
                                            'represents the length of the forward '
                                            'index, and the third represents the '
                                            'number of mismatches that are tolerated '
                                            'for this index. An example is "--f_index'
-                                           '12,12,2". This says that we start at '
+                                           '12 12 2". This says that we start at '
                                            '(0-based) index 12, grab the next 12 '
                                            'characters, and if a perfect match is '
                                            'not found for these grabbed characters '
@@ -364,14 +365,14 @@ plugin.methods.register_function(
 
                                'r_index_location': 'Positional values for r_index. This '
                                           'argument must be passed as 3 '
-                                           'comma-separated values. The first item '
+                                           'space-separated values. The first item '
                                            'represents the (0-based) expected start '
                                            'index of the reverse index. The second '
                                            'represents the length of the reverse '
                                            'index, and the third represents the '
                                            'number of mismatches that are tolerated '
                                            'for this index. An example is "--r_index'
-                                           '12,12,2". This says that we start at '
+                                           '12 12 2". This says that we start at '
                                            '(0-based) index 12, grab the next 12 '
                                            'characters, and if a perfect match is '
                                            'not found for these grabbed characters '
@@ -381,14 +382,14 @@ plugin.methods.register_function(
 
                                'seq_location': 'Positional values for nucleotide '
                                        'sequence data. This argument must be '
-                                       'passed as 3 comma-separated values. The '
+                                       'passed as 3 space-separated values. The '
                                        'first item represents the (0-based) '
                                        'expected start index of the sequence. '
                                        'The second represents the length of the '
                                        'sequence, and the third represents the '
                                        'number of mismatches that are tolerated '
                                        'for a sequence. An example is "--seq '
-                                       '43,90,2". This says that we start at '
+                                       '43 90 2". This says that we start at '
                                        '(0-based) index 43, grab the next 90 '
                                        'characters, and if a perfect match is '
                                        'not found for these grabbed characters '
@@ -424,16 +425,16 @@ plugin.methods.register_function(
                     'barcodes':    FeatureData[ Sequence ]
               },
     parameters = { 'samplelist':     qiime2.plugin.Str,
-                   'f_index':       qiime2.plugin.Str,
-                   'r_index':       qiime2.plugin.Str,
-                   'seq':           qiime2.plugin.Str,
+                   'seq_location': qiime2.plugin.List[ qiime2.plugin.Int ],
+                   'f_index_location': qiime2.plugin.List[ qiime2.plugin.Int ],
+                   'r_index_location': qiime2.plugin.List[ qiime2.plugin.Int ],
                    'read_per_loop': qiime2.plugin.Int,
                    'num_threads': qiime2.plugin.Int,
                    'concatemer':  qiime2.plugin.Str,
-                   'aa_counts':  qiime2.plugin.Str
+                   'nt_level_counts': qiime2.plugin.Bool
                  },
     outputs = [ ( 'nt_counts', FeatureTable[ Frequency ] ),
-                ( 'aa_counts_o', FeatureTable[ Frequency ] )
+                ( 'aa_counts', FeatureTable[ Frequency ] )
               ],
     input_descriptions     = { 'library': 'Designed library containing nucleic acid'
                                           'peptides. Library should be in fasta '
@@ -458,16 +459,16 @@ plugin.methods.register_function(
                                               'reverse (I2) index, and the third is the'
                                               'samplename. ',
 
-                               'f_index': 'Positional values for f_index. This '
+                               'f_index_location': 'Positional values for f_index. This '
                                            'argument must be passed as 3 '
-                                           'comma-separated values. The first item '
+                                           'space-separated values. The first item '
                                            'represents the (0-based) expected start '
                                            'index of the forward index. The second '
                                            'represents the length of the forward '
                                            'index, and the third represents the '
                                            'number of mismatches that are tolerated '
                                            'for this index. An example is "--f_index'
-                                           '12,12,2". This says that we start at '
+                                           '12 12 2". This says that we start at '
                                            '(0-based) index 12, grab the next 12 '
                                            'characters, and if a perfect match is '
                                            'not found for these grabbed characters '
@@ -475,16 +476,16 @@ plugin.methods.register_function(
                                            'sequences with up to two allowed '
                                            'mismatches.',
 
-                               'r_index': 'Positional values for r_index. This '
+                               'r_index_location': 'Positional values for r_index. This '
                                           'argument must be passed as 3 '
-                                           'comma-separated values. The first item '
+                                           'space-separated values. The first item '
                                            'represents the (0-based) expected start '
                                            'index of the reverse index. The second '
                                            'represents the length of the reverse '
                                            'index, and the third represents the '
                                            'number of mismatches that are tolerated '
                                            'for this index. An example is "--r_index'
-                                           '12,12,2". This says that we start at '
+                                           '12 12 2". This says that we start at '
                                            '(0-based) index 12, grab the next 12 '
                                            'characters, and if a perfect match is '
                                            'not found for these grabbed characters '
@@ -492,16 +493,16 @@ plugin.methods.register_function(
                                            'sequences with up to two allowed '
                                            'mismatches.',
 
-                               'seq': 'Positional values for nucleotide '
+                               'seq_location': 'Positional values for nucleotide '
                                        'sequence data. This argument must be '
-                                       'passed as 3 comma-separated values. The '
+                                       'passed as 3 space-separated values. The '
                                        'first item represents the (0-based) '
                                        'expected start index of the sequence. '
                                        'The second represents the length of the '
                                        'sequence, and the third represents the '
                                        'number of mismatches that are tolerated '
                                        'for a sequence. An example is "--seq '
-                                       '43,90,2". This says that we start at '
+                                       '43 90 2". This says that we start at '
                                        '(0-based) index 43, grab the next 90 '
                                        'characters, and if a perfect match is '
                                        'not found for these grabbed characters '
