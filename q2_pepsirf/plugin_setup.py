@@ -93,10 +93,27 @@ plugin.methods.register_function(
         },
 
     outputs = [ ( 'enriched_species', FeatureTable[ DeconvolutedSpecies ] ),
-                ( 'peptide_assign_map', SpeciesAssignMap ) 
+                ( 'peptide_assignment_map', SpeciesAssignMap ) 
     ],
 
-    input_descriptions = { 'linked': 'Name of file containing peptide to species linkages.' },
+    input_descriptions = { 'linked': 'Name of file containing peptide to species linkages.',
+                           'id_name_map': 'File containing mappings from taxonomic'
+                                          'id to name. This file should be '
+                                          'formatted like the file '
+                                          '"rankedlineage.dmp" from NCBI. It is '
+                                          'recommended to either use this file or '
+                                          'a subset of this file that at least '
+                                          'contains the species ids of the '
+                                          'designed peptides. If included, the '
+                                          'output will contain a column denoting '
+                                          'the name of the species as well as the '
+                                          'id.',
+                           'enriched': 'File containing the names of enriched '
+                                        'peptides, one per line. Each file in '
+                                        'this file should have a corresponding '
+                                        'entry in the file provided by the '
+                                        '--linked option.'
+    },
 
     parameter_descriptions = { 'single_threaded': 'By default this module uses two '
                                'threads. Include this option with no '
@@ -224,7 +241,21 @@ plugin.methods.register_function(
                                                            'score_overlap_threshold <= 0.1. '
                                
     },
-    output_descriptions = { }
+    output_descriptions = { 'peptide_assignment_map': 'If specified, a map detailing which '
+                                        'peptides were assigned to which species'
+                                        'will be written. This map will be a '
+                                        'tab-delimited file with the first '
+                                        'column peptide names, and the second '
+                                        'column is a comma-separated list of '
+                                        'species the peptide was assigned to. '
+                                        'Note that this comma-separated list '
+                                        'will only contain multiple values in '
+                                        'the event of a tie.',
+
+                            'enriched_species':  'Name of the file to write output to. '
+                                        'Output will be in the form of a '
+                                        'tab-delimited file with a header.'
+    }
 )
 
 plugin.methods.register_function(
