@@ -18,3 +18,4 @@ DeconvolutedSpecies = SemanticType( 'DeconvolutedSpecies',
                                 variant_of = FeatureTable.field[ 'content' ]
                               )
 
+SpeciesAssignMap = SemanticType( 'SpeciesAssignMap' )
