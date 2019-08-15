@@ -26,7 +26,7 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
            num_threads: qiime2.plugin.Int = 2,
            read_per_loop: qiime2.plugin.Int = 800000,
            concatemer: qiime2.plugin.Str = "",
-           aa_counts: qiime2.plugin.Str = ""
+           nt_level_counts: qiime2.plugin.Bool = False
          ) -> ( pd.DataFrame, pd.DataFrame  ):
 
     count_to_str = lambda x: ','.join( [ str( item ) for item in x ] )
@@ -55,16 +55,16 @@ def demux( reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--index', str( barcodes ),
             '--num_threads', str( num_threads )
             ]
-    if r_index:
+    if r_index_location:
         cmd += [ '--r_index', count_to_str( r_index_location ) ]
     if concatemer:
         cmd += [ '--concatemer', concatemer ]
-    if aa_counts:
+
+    if nt_level_counts:
         cmd += [ '--aa_counts', aa_count_out.name ]
     else:
-        aa_count_out = io.StringIO()
-        out.write( 'Sequence name' )
-        out.close()
+        aa_count_out.write( 'Sequence name\tItem 1\nFirst\t1' )
+        aa_count_out.flush()
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
 
@@ -82,16 +82,18 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
                   library: DNAFASTAFormat,
                   barcodes: DNAFASTAFormat,
                   samplelist: qiime2.plugin.Str,
-                  seq:     qiime2.plugin.Str,
-                  f_index: qiime2.plugin.Str,
-                  r_index: qiime2.plugin.Str = "",
+                  seq_location: qiime2.plugin.List[ qiime2.plugin.Int ],
+                  f_index_location: qiime2.plugin.List[ qiime2.plugin.Int ],
+                  r_index_location: qiime2.plugin.List[ qiime2.plugin.Int ] = [ 0, 0, 0 ],
                   num_threads: qiime2.plugin.Int = 2,
                   read_per_loop: qiime2.plugin.Int = 800000,
                   concatemer: qiime2.plugin.Str = "",
-                  aa_counts: qiime2.plugin.Str = ""
+                  nt_level_counts: qiime2.plugin.Bool = False
                 ) -> ( pd.DataFrame, pd.DataFrame  ):
     aa_counts  = DNAFASTAFormat
     tsv_counts = DNAFASTAFormat
+
+    count_to_str = lambda x: ','.join( [ str( item ) for item in x ] )
 
     aa_count_out  = tempfile.NamedTemporaryFile( mode = 'w+' )
     tsv_count_out = tempfile.NamedTemporaryFile( mode = 'w+' )
@@ -103,8 +105,8 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             'demux',
             '--input_r1', f_inflated.name,
             '--input_r2', r_inflated.name,
-            '--f_index', f_index,
-            '--seq',     seq,
+            '--f_index', count_to_str( f_index_location ),
+            '--seq',     count_to_str( seq_location ),
             '--library', str( library ),
             '--read_per_loop', str( read_per_loop ),
             '--output', tsv_count_out.name,
@@ -112,16 +114,17 @@ def demux_paired( f_reads: MultiplexedSingleEndBarcodeInSequenceDirFmt,
             '--index', str( barcodes ),
             '--num_threads', str( num_threads )
             ]
-    if r_index:
-        cmd += [ '--r_index', r_index ]
+
+    if r_index_location:
+        cmd += [ '--r_index', count_to_str( r_index_location ) ]
     if concatemer:
         cmd += [ '--concatemer', concatemer ]
-    if aa_counts:
+
+    if nt_level_counts:
         cmd += [ '--aa_counts', aa_count_out.name ]
     else:
-        aa_count_out = io.StringIO()
-        out.write( 'Sequence name' )
-        out.close()
+        aa_count_out.write( 'Sequence name\tItem 1\nFirst\t1' )
+        aa_count_out.flush()
 
     print( subprocess.check_output( cmd ).decode( 'ascii' ) ) 
 
