@@ -9,7 +9,7 @@ somewhere located in your $PATH.
 Clone this repo and enter the ```q2-pepsirf``` directory.
 Then, activate your qiime2 conda environment and run 
 ```
-python setup.py install
+python3 setup.py install
 qiime dev refresh-cache
 ```
 The plugin should now be available from qiime.
