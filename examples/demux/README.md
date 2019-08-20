@@ -29,12 +29,13 @@ qiime tools import --type FeatureData[Sequence] \
 #### Demultiplex the reads, using the previously imported artifacts.
 ```
 qiime pepsirf demux --i-reads artifacts/f_reads.qza \
-                    --i-library artifacts/library.qza \
-					--i-barcodes artifacts/barcodes.qza \ 
-					--p-f-index-location 12 12 2 \ 
-					--p-seq-location 43 90 2 \ 
-					--p-num-threads 2 \ 
-					--p-samplelist raw_files/ex_samplelist.tsv \ 
-					--output-dir output_demux \ 
-					--verbose
+--i-library artifacts/library.qza \
+--i-barcodes artifacts/barcodes.qza \
+--p-f-index-location 12 12 2 \
+--p-seq-location 43 90 2 \
+--p-num-threads 2 \
+--p-samplelist raw_files/ex_samplelist.tsv \
+--output-dir output_demux --verbose
 ```
+
+
